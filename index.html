@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Maize Stage Result + AR View</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- <model-viewer> scripts -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
+  <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.1.3/webcomponents-loader.js"></script>
+  <script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script>
+  <script src="https://unpkg.com/resize-observer-polyfill@1.5.0/dist/ResizeObserver.js"></script>
+  <script src="https://unpkg.com/focus-visible@5.0.2/dist/focus-visible.js" defer></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    h1 {
+      color: #2f6627;
+    }
+    .stage {
+      font-size: 1.5em;
+      color: #0b6623;
+      margin-top: 15px;
+    }
+    .ar-button {
+      margin-top: 25px;
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .ar-button:hover {
+      background-color: #1b5e20;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌽 Maize Growth Stage Result</h1>
+  <div class="stage" id="stageText"></div>
+
+  <!-- AR Launch Button -->
+  <button class="ar-button" id="ar-link">🔍 View in 3D AR</button>
+
+  <script>
+    // --- SHOW STAGE FROM URL ---
+    const params = new URLSearchParams(window.location.search);
+    const stage = decodeURIComponent(params.get("stage") || "");
+    const stageDiv = document.getElementById("stageText");
+    const arButton = document.getElementById("ar-link");
+
+    if (stage) {
+      stageDiv.textContent = "Predicted Stage: " + stage;
+    } else {
+      stageDiv.textContent = "No stage data received.";
+    }
+
+    // --- DETECT DEVICE ---
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+    // --- DEFINE AR FILES FOR EACH STAGE ---
+    const stageModels = {
+      "Stage 1": {
+        glb: "https://raw.githubusercontent.com/merajexplorer-oss/March10-2026-MaizeProject-AR3dModels/refs/heads/main/Stage1.glb",
+        usdz: "https://raw.githubusercontent.com/merajexplorer-oss/March10-2026-MaizeProject-AR3dModels/refs/heads/main/Cartoon_Bird.usdz"
+      },
+      "Stage 2": {
+        glb: "https://raw.githubusercontent.com/merajexplorer-oss/March10-2026-MaizeProject-AR3dModels/refs/heads/main/Stage2.glb",
+        usdz: "https://raw.githubusercontent.com/merajexplorer-oss/March10-2026-MaizeProject-AR3dModels/refs/heads/main/Cartoon_Bird.usdz"
+      },
+      "Stage 3": {
+        glb: "https://raw.githubusercontent.com/merajexplorer-oss/March10-2026-MaizeProject-AR3dModels/refs/heads/main/Stage3.glb",
+        usdz: "https://raw.githubusercontent.com/merajexplorer-oss/March10-2026-MaizeProject-AR3dModels/refs/heads/main/Cartoon_Bird.usdz"
+      },
+      "Stage 4": {
+        glb: "https://raw.githubusercontent.com/merajexplorer-oss/March10-2026-MaizeProject-AR3dModels/refs/heads/main/Stage4.glb",
+        usdz: "https://raw.githubusercontent.com/merajexplorer-oss/March10-2026-MaizeProject-AR3dModels/refs/heads/main/Cartoon_Bird.usdz"
+      },
+      "Stage 5": {
+        glb: "https://raw.githubusercontent.com/merajexplorer-oss/March10-2026-MaizeProject-AR3dModels/refs/heads/main/Stage5.glb",
+        usdz: "https://raw.githubusercontent.com/merajexplorer-oss/March10-2026-MaizeProject-AR3dModels/refs/heads/main/Cartoon_Bird.usdz"
+      }
+    };
+
+    // --- CHOOSE MODEL BASED ON STAGE ---
+    let selectedModel;
+    if (stage.includes("Stage 1")) {
+      selectedModel = stageModels["Stage 1"];
+    } else if (stage.includes("Stage 2")) {
+      selectedModel = stageModels["Stage 2"];
+    } else if (stage.includes("Stage 3")) {
+      selectedModel = stageModels["Stage 3"];
+    } else if (stage.includes("Stage 4")) {
+      selectedModel = stageModels["Stage 4"];
+    } else if (stage.includes("Stage 5")) {
+      selectedModel = stageModels["Stage 5"];
+    }
+
+    // --- CREATE INTENT URLS ---
+    const androidIntentURL =
+      `intent://arvr.google.com/scene-viewer/1.2?` +
+      `file=${selectedModel.glb}` +
+      `&title=Maize+${encodeURIComponent(stage)}` +
+      `&mode=ar_only#Intent;scheme=https;package=com.google.android.googlequicksearchbox;` +
+      `S.browser_fallback_url=https://arvr.google.com/scene-viewer?file=${selectedModel.glb}` +
+      `&title=Maize+${encodeURIComponent(stage)}&mode=ar_only;end;`;
+
+    // --- ON BUTTON CLICK ---
+    arButton.addEventListener("click", () => {
+      if (isIOS) {
+        window.location.href = selectedModel.usdz;
+      } else {
+        window.location.href = androidIntentURL;
+      }
+    });
+  </script>
+</body>
+</html>
