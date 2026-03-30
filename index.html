@@ -91,7 +91,11 @@
         usdz: "https://raw.githubusercontent.com/merajexplorer-oss/March10-2026-MaizeProject-AR3dModels/refs/heads/main/Cartoon_Bird.usdz"
       },
       "Stage 5": {
-        glb: "https://raw.githubusercontent.com/merajexplorer-oss/March10-2026-MaizeProject-AR3dModels/refs/heads/main/Stage5.glb",
+        glb: "https://raw.githubusercontent.com/merajexplorer-oss/March10-2026-MaizeProject-AR3dModels/refs/heads/main/Stage4.glb",
+        usdz: "https://raw.githubusercontent.com/merajexplorer-oss/March10-2026-MaizeProject-AR3dModels/refs/heads/main/Cartoon_Bird.usdz"
+      },
+      "Stage 5 unhealthy": {
+        glb: "https://raw.githubusercontent.com/merajexplorer-oss/March10-2026-MaizeProject-AR3dModels/refs/heads/main/StandAnimated.glb",
         usdz: "https://raw.githubusercontent.com/merajexplorer-oss/March10-2026-MaizeProject-AR3dModels/refs/heads/main/Cartoon_Bird.usdz"
       }
     };
@@ -108,6 +112,8 @@
       selectedModel = stageModels["Stage 4"];
     } else if (stage.includes("Stage 5")) {
       selectedModel = stageModels["Stage 5"];
+    } else if (stage.includes("Stage 5 unhealthy")) {
+      selectedModel = stageModels["Stage 5 unhealthy"];
     }
 
     // --- CREATE INTENT URLS ---
